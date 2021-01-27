@@ -18,7 +18,7 @@ class InvertedIndex private constructor() {
                     val nGrams = nGramsList[index]
                     val size = nGrams.values.sum()
                     nGrams.forEach { (nGram: NGram, count: Count) ->
-                        hashTable.getOrPut(nGram) { mutableListOf() }.add(nGram to size to count)
+                        hashTable.getOrPut(nGram) { mutableListOf() }.add(index to size to count)
                     }
                 }
             }
