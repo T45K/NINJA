@@ -1,14 +1,14 @@
 package io.github.t45k.ninja.usecase.cloneDetection
 
-import io.github.t45k.ninja.entity.NGramInfo
+import io.github.t45k.ninja.entity.CodeBlock
 import kotlin.math.max
 
 /**
  * Using Jaccard Similarity
  */
-class NGramBasedFiltration(private val threshold: Int) : Filtration {
-    override fun filter(nGramSize: Int, cloneCandidate: Map.Entry<NGramInfo, Counter>): Boolean {
-        val max = max(nGramSize, cloneCandidate.key.size)
+class NGramBasedFiltration(private val threshold: Int, private val codeBlocks: List<CodeBlock>) {
+    fun filter(baseIndex: Int, cloneCandidate: Map.Entry<Int, Counter>): Boolean {
+        val max = max(codeBlocks[baseIndex].numElements, codeBlocks[cloneCandidate.key].numElements)
         return cloneCandidate.value.value * 100 / max >= threshold
     }
 }

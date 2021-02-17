@@ -9,21 +9,23 @@ class InvertedIndex private constructor() {
          */
         fun create(
             partitionSize: Int,
-            nGramsList: List<NGrams>,
+            codeBlocks: List<CodeBlock>,
             startIndex: Int
         ): InvertedIndex =
             InvertedIndex().apply {
-                val endIndex = min(startIndex + partitionSize, nGramsList.size)
+                val endIndex = min(startIndex + partitionSize, codeBlocks.size)
                 for (index in startIndex until endIndex) {
-                    val nGrams = nGramsList[index]
-                    val size = nGrams.values.sum()
-                    nGrams.forEach { (nGram: NGram, count: Count) ->
-                        hashTable.getOrPut(nGram) { mutableListOf() }.add(index to size to count)
+                    val codeBlock = codeBlocks[index]
+                    codeBlock.elements.forEach { (element: Element, count: Count) ->
+                        hashTable.getOrPut(element) { mutableListOf() }
+                            .add(ComparisonUnit(index, codeBlock.numElements, count))
                     }
                 }
             }
     }
 
-    private val hashTable = mutableMapOf<NGram, MutableList<Pair<NGramInfo, Count>>>()
-    operator fun get(key: NGram): List<Pair<NGramInfo, Count>> = hashTable[key] ?: emptyList()
+    private val hashTable = mutableMapOf<Element, MutableList<ComparisonUnit>>()
+    operator fun get(key: Element): List<ComparisonUnit> = hashTable[key] ?: emptyList()
 }
+
+data class ComparisonUnit(val index: Int, val size: Int, val count: Count)
