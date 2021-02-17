@@ -25,7 +25,9 @@ class NinjaMain(private val config: NinjaConfig) {
         val startTime = System.currentTimeMillis()
         logger.infoStart()
 
-        val codeBlocks: List<CodeBlock> = emptyList()
+        val codeBlocks: List<CodeBlock> = input(config)
+        logger.infoPreprocessCompletion(codeBlocks.size)
+
         val partitionSize = (codeBlocks.size + config.partitionNum - 1) / config.partitionNum
         val filtrationPhase = NGramBasedFiltration(config.filteringThreshold, codeBlocks)
 
